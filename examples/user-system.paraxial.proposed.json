@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "modelKind": "paraxial-exploration",
+  "name": "Sistema informado — exploração por lentes finas",
+  "description": "Focais e distâncias informadas pelo usuário. Distâncias interpretadas entre planos ideais. Diâmetros de 4 mm, fenda de 0.3 × 1 mm e tela de 40 × 40 mm são escolhas demonstrativas, não medidas. Não representa lentes físicas caracterizadas.",
+  "units": {
+    "length": "mm",
+    "wavelength": "nm"
+  },
+  "wavelengthNm": 587.6,
+  "materials": {
+    "air-ideal": {
+      "model": "constant",
+      "n": 1,
+      "label": "Ar ideal",
+      "provenance": {
+        "reference": "Aproximação n=1"
+      }
+    }
+  },
+  "initialMediumId": "air-ideal",
+  "firstVertexZMm": 2,
+  "source": {
+    "kind": "point",
+    "positionMm": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "angular": {
+      "model": "uniform-cone",
+      "halfAngleDeg": 60
+    }
+  },
+  "surfaces": [
+    {
+      "id": "condenser",
+      "label": "Condensadora ideal f=8 (biconvexa informada)",
+      "kind": "thin-lens",
+      "focalLengthMm": 8,
+      "aperture": {
+        "kind": "circle",
+        "radiusMm": 2
+      },
+      "gapAfterMm": 4
+    },
+    {
+      "id": "slit",
+      "label": "Fenda — altura 1 mm assumida",
+      "kind": "mask",
+      "aperture": {
+        "kind": "rectangle",
+        "widthMm": 0.3,
+        "heightMm": 1
+      },
+      "gapAfterMm": 15
+    },
+    {
+      "id": "projector",
+      "label": "Projetora ideal f=14 (plano-convexa informada)",
+      "kind": "thin-lens",
+      "focalLengthMm": 14,
+      "aperture": {
+        "kind": "circle",
+        "radiusMm": 2
+      },
+      "gapAfterMm": 90
+    },
+    {
+      "id": "screen",
+      "label": "Anteparo — 40 × 40 mm assumidos",
+      "kind": "detector",
+      "aperture": {
+        "kind": "rectangle",
+        "widthMm": 40,
+        "heightMm": 40
+      },
+      "gapAfterMm": null
+    }
+  ],
+  "analysis": {
+    "objectSurfaceId": "slit",
+    "footprintSurfaceId": "projector",
+    "detectorGrid": {
+      "width": 128,
+      "height": 128
+    },
+    "objectProbeFractions": [
+      {
+        "x": 0,
+        "y": 0
+      },
+      {
+        "x": 0,
+        "y": 0.9
+      }
+    ]
+  },
+  "sampling": {
+    "algorithm": "to-be-specified-v1",
+    "seed": 12345,
+    "illuminationRayCount": 100000,
+    "diagnosticRayCount": 1024,
+    "maxStoredPaths": 128
+  },
+  "physics": {
+    "transmission": "ideal"
+  }
+}
