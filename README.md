@@ -4,6 +4,8 @@ Simulador óptico sequencial local para iluminação, projeção de fenda e spot
 
 ## Rodar
 
+**Primeiro teste no Linux Mint:** siga o [passo a passo para instalar, abrir e atualizar](docs/12-linux-mint.md). Não é necessário conhecer programação nem instalar Python. O app atual ainda não é um pacote .deb/AppImage.
+
 Requer **Node.js 22.12+** (validado com Node 24) e npm.
 
 ```bash
@@ -13,14 +15,13 @@ npm run dev
 
 Abra http://localhost:5173. A instalação precisa de acesso ao registro npm; o uso normal e os cálculos funcionam sem internet, com o servidor local em execução. O aplicativo não depende de fontes, CDNs ou APIs externas. Não há service worker/PWA para abrir o app sem um servidor local.
 
-Para usar o build de produção:
+Para compilar e abrir a versão de produção somente no próprio computador:
 
 ```bash
-npm run build
-npm run preview
+npm start
 ```
 
-Abra http://localhost:4173. Os arquivos compilados ficam em `apps/web/dist` e podem ser servidos por qualquer servidor de arquivos estáticos. Não abra `index.html` por `file://`: o navegador precisa servir os módulos e o Worker por HTTP local.
+Abra http://127.0.0.1:4173. A versão recomendada do Node está em `.nvmrc` (24). Os arquivos compilados ficam em `apps/web/dist` e podem ser servidos por qualquer servidor de arquivos estáticos. Não abra `index.html` por `file://`: o navegador precisa servir os módulos e o Worker por HTTP local.
 
 ## Experimentar
 
@@ -82,3 +83,5 @@ docs/                    contratos, origem dos dados e estado da entrega
 ```
 
 A especificação original permanece em [Produto](docs/01-produto.md), [Arquitetura](docs/02-arquitetura.md), [Física](docs/03-fisica.md), [Formato](docs/04-formato.md), [Validação](docs/05-validacao.md), [Roteiro](docs/06-handoff-sol.md), [Referências](docs/07-referencias.md), [Referenciais](docs/08-referenciais.md) e [Sistema do usuário](docs/09-sistema-exemplo.md). Os trechos que descrevem a implementação no futuro registram o planejamento original; [Estado da entrega](docs/10-entrega.md) descreve o aplicativo atual. Os nomes `*.proposed.json` dos dois fixtures originais foram mantidos para preservar os links.
+
+Sobre instaláveis e a diferença entre linguagem, recursos e precisão: [docs/13-desktop-e-confiabilidade.md](docs/13-desktop-e-confiabilidade.md).

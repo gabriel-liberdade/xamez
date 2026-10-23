@@ -21,7 +21,8 @@
     "schema": "tsx scripts/schema.ts",
     "benchmark": "tsx scripts/benchmark.ts",
     "format": "prettier --write apps packages scripts tests *.ts *.json",
-    "format:check": "prettier --check apps packages scripts tests *.ts *.json"
+    "format:check": "prettier --check apps packages scripts tests *.ts *.json",
+    "start": "npm run build && vite preview apps/web --host 127.0.0.1 --port 4173 --strictPort"
   },
   "dependencies": {
     "react": "19.2.4",
