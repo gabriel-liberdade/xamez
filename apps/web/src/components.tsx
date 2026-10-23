@@ -21,7 +21,7 @@ export function NumberField({
   disabled = false,
 }: {
   value: number;
-  onCommit: (n: number) => void;
+  onCommit: (n: number) => boolean | void;
   label: string;
   step?: number | 'any';
   disabled?: boolean;
@@ -38,14 +38,19 @@ export function NumberField({
       setInvalid(true);
       return;
     }
-    setInvalid(false);
-    if (n !== value) onCommit(n);
+    if (n !== value) setInvalid(onCommit(n) === false);
+    else setInvalid(false);
   };
   return (
     <input
       className={invalid ? 'invalid' : ''}
       aria-label={label}
       aria-invalid={invalid}
+      title={
+        invalid
+          ? 'Valor não aplicado. Corrija ou pressione Escape para voltar ao valor do projeto.'
+          : undefined
+      }
       inputMode="decimal"
       value={text}
       disabled={disabled}
@@ -99,6 +104,7 @@ export function Diagram({
   );
   const canvas = useRef<HTMLCanvasElement>(null),
     view = useRef({ scale: 1, x0: 0, y0: 0 }),
+    [size, setSize] = useState({ width: 1100, height: 300 }),
     [zoom, setZoom] = useState(1),
     [pan, setPan] = useState({ x: 0, y: 0 }),
     drag = useRef<{
@@ -112,9 +118,26 @@ export function Diagram({
   useEffect(() => {
     const el = canvas.current;
     if (!el) return;
+    const observer = new ResizeObserver(() => {
+      const width = Math.max(1, Math.round(el.clientWidth)),
+        height = width < 560 ? 220 : 300;
+      setSize((previous) =>
+        previous.width === width && previous.height === height ? previous : { width, height },
+      );
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    const el = canvas.current;
+    if (!el) return;
+    const deviceRatio = window.devicePixelRatio || 1;
+    el.width = Math.round(size.width * deviceRatio);
+    el.height = Math.round(size.height * deviceRatio);
     const ctx = el.getContext('2d')!;
-    const w = 1100,
-      h = 360;
+    ctx.setTransform(deviceRatio, 0, 0, deviceRatio, 0, 0);
+    const w = size.width,
+      h = size.height;
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = '#101c28';
     ctx.fillRect(0, 0, w, h);
@@ -244,19 +267,20 @@ export function Diagram({
     ctx.fillStyle = '#9aafc2';
     ctx.fillText('fonte', sx + 8, sy + 18);
     ctx.fillText(`z (mm) →   ${axis} (mm) ↑`, w - 155, 24);
-  }, [system, paths, selectedId, axis, zoom, pan]);
+  }, [system, paths, selectedId, axis, zoom, pan, size]);
   return (
     <div className="diagram">
       <canvas
         ref={canvas}
-        width={1100}
-        height={360}
+        width={size.width}
+        height={size.height}
+        style={{ height: size.height }}
         aria-label={`${projected ? 'Projeção dos raios' : 'Traçado meridional'} no plano ${axis.toUpperCase()}Z`}
         onPointerDown={(e) => {
           const el = e.currentTarget,
             rect = el.getBoundingClientRect(),
-            x = ((e.clientX - rect.left) * 1100) / rect.width,
-            y = ((e.clientY - rect.top) * 360) / rect.height,
+            x = ((e.clientX - rect.left) * size.width) / rect.width,
+            y = ((e.clientY - rect.top) * size.height) / rect.height,
             { scale, x0, y0 } = view.current;
           const hits = system.surfaces
             .map((s) => ({
@@ -284,16 +308,16 @@ export function Diagram({
           if (!d || d.screen) return;
           const rect = e.currentTarget.getBoundingClientRect();
           setPan({
-            x: d.panX + ((e.clientX - rect.left) * 1100) / rect.width - d.x,
-            y: d.panY + ((e.clientY - rect.top) * 360) / rect.height - d.y,
+            x: d.panX + ((e.clientX - rect.left) * size.width) / rect.width - d.x,
+            y: d.panY + ((e.clientY - rect.top) * size.height) / rect.height - d.y,
           });
         }}
         onPointerUp={(e) => {
           const d = drag.current;
           if (d?.screen) {
             const rect = e.currentTarget.getBoundingClientRect(),
-              dx = ((e.clientX - rect.left) * 1100) / rect.width - d.x,
-              dy = ((e.clientY - rect.top) * 360) / rect.height - d.y,
+              dx = ((e.clientX - rect.left) * size.width) / rect.width - d.x,
+              dy = ((e.clientY - rect.top) * size.height) / rect.height - d.y,
               k = system.surfaces.at(-1)!.frame.basis[2],
               den = k.z * k.z + k[axis] * k[axis];
             if (den > 1e-8 && Math.hypot(dx, dy) > 3)

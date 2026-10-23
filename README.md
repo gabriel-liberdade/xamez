@@ -33,11 +33,13 @@ O seletor **Experimento** carrega seis projetos reproduzíveis:
 - **Espelho:** dobra de 90° e detector no referencial de saída.
 - **Placa inclinada:** duas faces rotacionadas rigidamente; feixe emerge paralelo e deslocado.
 
+A área **Montagem** contém a tabela; **Análises** reúne os seis diagnósticos. Na lateral, **Elemento** mostra apenas as propriedades da seleção, e **Fonte** concentra iluminação e física. O resumo de luz, conjugado, magnificação e tamanho continua visível nos dois modos. **Hipóteses e descrição** mantém as suposições do exemplo acessíveis.
+
 Selecione uma linha para editar sua abertura, vidro ou inclinação. A tabela permite alterar raios/focais e gaps. A fenda oferece larguras 0,1 / 0,3 / 0,5 / 1 mm e altura livre. Campos numéricos aceitam vírgula decimal; confirme com Enter ou saindo do campo. Arraste o fundo do desenho para navegar e o centro da tela para mover o trecho final. O leque desenhado é ilustrativo; as porcentagens usam uma amostragem 3D independente.
 
 **Prévia:** até 5.000 raios após editar. **Refinar:** quantidade configurada, inicialmente 100.000. Cálculos rodam num Worker, com cancelamento entre blocos e descarte de respostas antigas. As análises mostram fluxo, footprint antes do recorte, manchas por ponto, matriz/conjugação, intercepto meridional e perdas por superfície.
 
-**Salvar projeto** exporta JSON com materiais embutidos. **Importar JSON** e **Editar JSON** passam pelo mesmo validador; entradas inválidas preservam o último projeto válido. Há desfazer/refazer, autosave recuperável e exportação CSV das perdas com metadados de execução. Ctrl/Cmd+Z desfaz fora de campos de texto; Shift+Ctrl/Cmd+Z refaz.
+**Salvar projeto** exporta JSON com materiais embutidos. **Projeto → Importar JSON** e **Projeto → Editar JSON** passam pelo mesmo validador; entradas inválidas preservam o último projeto válido. Há desfazer/refazer, autosave recuperável e exportação CSV das perdas com metadados de execução. Ctrl/Cmd+Z desfaz fora de campos de texto; Shift+Ctrl/Cmd+Z refaz.
 
 ## Verificar
 
@@ -57,7 +59,7 @@ npx playwright install chromium
 CHROMIUM_PATH="$(node --input-type=module -e "import {chromium} from '@playwright/test'; process.stdout.write(chromium.executablePath())")" npm run test:e2e
 ```
 
-Há CI para testes unitários, formatação, build e integração no navegador. A evidência e os limites da entrega estão em [docs/10-entrega.md](docs/10-entrega.md).
+Há CI para testes unitários, formatação, build e integração no navegador. A evidência e os limites da entrega estão em [docs/10-entrega.md](docs/10-entrega.md). As decisões da interface estão em [docs/11-interface.md](docs/11-interface.md).
 
 ## Modelos e limites
 
