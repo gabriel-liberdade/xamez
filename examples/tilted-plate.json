@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "name": "Placa paralela inclinada — 20 graus",
+  "description": "Placa sintética n=1.5, espessura 5 mm, inclinação rígida das duas faces. Feixe sai paralelo e deslocado.",
+  "units": {
+    "length": "mm",
+    "wavelength": "nm"
+  },
+  "wavelengthNm": 587.6,
+  "materials": {
+    "air-ideal": {
+      "model": "constant",
+      "n": 1,
+      "label": "Ar ideal",
+      "provenance": {
+        "reference": "Aproximação explícita n=1"
+      }
+    },
+    "demo-n150": {
+      "model": "constant",
+      "n": 1.5,
+      "label": "Vidro artificial n=1.5",
+      "provenance": {
+        "reference": "Material sintético para teste analítico"
+      }
+    }
+  },
+  "initialMediumId": "air-ideal",
+  "firstVertexZMm": 0,
+  "source": {
+    "kind": "collimated",
+    "launchPlaneZMm": -20,
+    "launchAperture": {
+      "kind": "circle",
+      "radiusMm": 0.5
+    },
+    "fieldAnglesDeg": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "surfaces": [
+    {
+      "id": "lens1-front",
+      "label": "Lente — face frontal",
+      "kind": "interface",
+      "shape": {
+        "kind": "plane"
+      },
+      "mediumAfterId": "demo-n150",
+      "aperture": {
+        "kind": "circle",
+        "radiusMm": 2
+      },
+      "gapAfterMm": 5
+    },
+    {
+      "id": "lens1-back",
+      "label": "Lente — face traseira",
+      "kind": "interface",
+      "shape": {
+        "kind": "plane"
+      },
+      "mediumAfterId": "air-ideal",
+      "aperture": {
+        "kind": "circle",
+        "radiusMm": 2
+      },
+      "gapAfterMm": 30
+    },
+    {
+      "id": "screen",
+      "label": "Tela",
+      "kind": "detector",
+      "aperture": {
+        "kind": "rectangle",
+        "widthMm": 12,
+        "heightMm": 12
+      },
+      "gapAfterMm": null
+    }
+  ],
+  "analysis": {
+    "footprintSurfaceId": "lens1-back",
+    "detectorGrid": {
+      "width": 128,
+      "height": 128
+    },
+    "objectProbeFractions": [
+      {
+        "x": 0,
+        "y": 0
+      },
+      {
+        "x": 0,
+        "y": 0.9
+      },
+      {
+        "x": 0.9,
+        "y": 0
+      }
+    ]
+  },
+  "sampling": {
+    "algorithm": "mulberry32-v1",
+    "seed": 12345,
+    "illuminationRayCount": 100000,
+    "diagnosticRayCount": 1024,
+    "maxStoredPaths": 128
+  },
+  "physics": {
+    "transmission": "fresnel-uncoated"
+  },
+  "modelKind": "real-surfaces",
+  "lensGroups": [
+    {
+      "id": "lens1",
+      "surfaceIds": [
+        "lens1-front",
+        "lens1-back"
+      ],
+      "tiltDeg": {
+        "x": 20,
+        "y": 0
+      }
+    }
+  ]
+}

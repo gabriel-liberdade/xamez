@@ -1,0 +1,7 @@
+node_modules
+dist
+package-lock.json
+packages/project-format/project.schema.json
+docs/material-data
+playwright-report
+test-results

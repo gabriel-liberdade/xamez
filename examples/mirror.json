@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "name": "Espelho plano — dobra de 90 graus",
+  "description": "Espelho ideal a 45 graus, feixe colimado, detector em coordenadas locais. Exemplo sintético.",
+  "units": {
+    "length": "mm",
+    "wavelength": "nm"
+  },
+  "wavelengthNm": 587.6,
+  "materials": {
+    "air-ideal": {
+      "model": "constant",
+      "n": 1,
+      "label": "Ar ideal",
+      "provenance": {
+        "reference": "Aproximação explícita n=1"
+      }
+    },
+    "demo-n150": {
+      "model": "constant",
+      "n": 1.5,
+      "label": "Vidro artificial n=1.5",
+      "provenance": {
+        "reference": "Material sintético para teste analítico"
+      }
+    }
+  },
+  "initialMediumId": "air-ideal",
+  "firstVertexZMm": 0,
+  "source": {
+    "kind": "collimated",
+    "launchPlaneZMm": -20,
+    "launchAperture": {
+      "kind": "circle",
+      "radiusMm": 1
+    },
+    "fieldAnglesDeg": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "surfaces": [
+    {
+      "id": "mirror",
+      "label": "Espelho ideal 45°",
+      "kind": "mirror",
+      "shape": {
+        "kind": "plane"
+      },
+      "tiltDeg": {
+        "x": 45,
+        "y": 0
+      },
+      "reflectance": 1,
+      "aperture": {
+        "kind": "circle",
+        "radiusMm": 3
+      },
+      "gapAfterMm": 30
+    },
+    {
+      "id": "screen",
+      "label": "Tela local",
+      "kind": "detector",
+      "aperture": {
+        "kind": "rectangle",
+        "widthMm": 8,
+        "heightMm": 8
+      },
+      "gapAfterMm": null
+    }
+  ],
+  "analysis": {
+    "footprintSurfaceId": "mirror",
+    "detectorGrid": {
+      "width": 128,
+      "height": 128
+    },
+    "objectProbeFractions": [
+      {
+        "x": 0,
+        "y": 0
+      },
+      {
+        "x": 0,
+        "y": 0.9
+      },
+      {
+        "x": 0.9,
+        "y": 0
+      }
+    ]
+  },
+  "sampling": {
+    "algorithm": "mulberry32-v1",
+    "seed": 12345,
+    "illuminationRayCount": 100000,
+    "diagnosticRayCount": 1024,
+    "maxStoredPaths": 128
+  },
+  "physics": {
+    "transmission": "fresnel-uncoated"
+  },
+  "modelKind": "real-surfaces",
+  "lensGroups": []
+}
