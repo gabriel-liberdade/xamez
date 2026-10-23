@@ -362,12 +362,26 @@ export function MapCanvas({
     const a = surface.aperture,
       bw = a.kind === 'rectangle' ? a.widthMm : 2 * a.radiusMm,
       bh = a.kind === 'rectangle' ? a.heightMm : 2 * a.radiusMm;
-    const scale = Math.min((w - 70) / bw, (h - 70) / bh),
+    let plotWidth = bw,
+      plotHeight = bh;
+    if (kind === 'footprint') {
+      // Include the pre-aperture hits, including rejected rays far outside it.
+      for (let i = 0; i < result.footprint.length; i += 3) {
+        plotWidth = Math.max(plotWidth, 2.1 * Math.abs(result.footprint[i]));
+        plotHeight = Math.max(plotHeight, 2.1 * Math.abs(result.footprint[i + 1]));
+      }
+    }
+    const scale = Math.min((w - 70) / plotWidth, (h - 70) / plotHeight),
       cx = w / 2,
       cy = h / 2;
     ctx.strokeStyle = '#4c657d';
     ctx.lineWidth = 1;
-    ctx.strokeRect(cx - (bw * scale) / 2, cy - (bh * scale) / 2, bw * scale, bh * scale);
+    ctx.strokeRect(
+      cx - (plotWidth * scale) / 2,
+      cy - (plotHeight * scale) / 2,
+      plotWidth * scale,
+      plotHeight * scale,
+    );
     ctx.beginPath();
     ctx.moveTo(cx, 25);
     ctx.lineTo(cx, h - 25);
@@ -432,11 +446,11 @@ export function MapCanvas({
     ctx.fillStyle = '#9aafc2';
     ctx.font = '12px system-ui';
     ctx.textAlign = 'center';
-    ctx.fillText(`x: ±${fmt(bw / 2)} mm`, cx, h - 10);
+    ctx.fillText(`x: ±${fmt(plotWidth / 2)} mm`, cx, h - 10);
     ctx.save();
     ctx.translate(14, cy);
     ctx.rotate(-Math.PI / 2);
-    ctx.fillText(`y: ±${fmt(bh / 2)} mm`, 0, 0);
+    ctx.fillText(`y: ±${fmt(plotHeight / 2)} mm`, 0, 0);
     ctx.restore();
   }, [result, system, kind, log, footprintSurfaceId]);
   return (
