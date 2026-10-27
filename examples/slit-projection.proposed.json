@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Projeção de fenda — demonstração sintética",
-  "description": "Contrato proposto. Vidro artificial n=1.5; não é N-BK7. Sem condensadora, coleta de luz baixa é esperada. Conjugado paraxial a 100 mm após a última face, magnificação -1. Ainda não simulado pelo Xamez.",
+  "description": "Demonstração sintética; vidro artificial n=1.5. Sem condensadora: coleta de luz baixa é esperada. Conjugado paraxial a 100 mm após a última face, magnificação -1; aberração esférica no traçado real.",
   "units": {
     "length": "mm",
     "wavelength": "nm"
@@ -116,7 +116,7 @@
     ]
   },
   "sampling": {
-    "algorithm": "to-be-specified-v1",
+    "algorithm": "mulberry32-v1",
     "seed": 12345,
     "illuminationRayCount": 100000,
     "diagnosticRayCount": 1024,
@@ -125,5 +125,18 @@
   "physics": {
     "transmission": "fresnel-uncoated"
   },
-  "modelKind": "real-surfaces"
+  "modelKind": "real-surfaces",
+  "lensGroups": [
+    {
+      "id": "lens1",
+      "surfaceIds": [
+        "lens1-front",
+        "lens1-back"
+      ],
+      "tiltDeg": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ]
 }

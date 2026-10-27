@@ -1,0 +1,28 @@
+{
+  "measuredAt": "2026-10-23T04:42:28.591Z",
+  "runtime": "v24.19.0",
+  "platform": "linux",
+  "arch": "x64",
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "logicalCpus": 3,
+  "totalMemoryGiB": 9.734622955322266,
+  "kind": "Node, síncrono, 18 interfaces refrativas planas + máscara + detector, todos os raios sobrevivem; heap total do processo, não memória exclusiva do motor.",
+  "results": [
+    {
+      "rays": 200,
+      "surfaces": 20,
+      "iterations": 10,
+      "medianMs": 4.711747000000003,
+      "p95Ms": 8.657546000000025,
+      "maxObservedHeapMiB": 20.439361572265625
+    },
+    {
+      "rays": 100000,
+      "surfaces": 20,
+      "iterations": 10,
+      "medianMs": 608.529689,
+      "p95Ms": 631.6284940000003,
+      "maxObservedHeapMiB": 35.339752197265625
+    }
+  ]
+}

@@ -1,0 +1,761 @@
+{
+  "$ref": "#/definitions/XamezProject",
+  "definitions": {
+    "XamezProject": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "modelKind": {
+          "type": "string",
+          "enum": [
+            "real-surfaces",
+            "paraxial-exploration"
+          ],
+          "default": "real-surfaces"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "units": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "string",
+              "const": "mm"
+            },
+            "wavelength": {
+              "type": "string",
+              "const": "nm"
+            }
+          },
+          "required": [
+            "length",
+            "wavelength"
+          ],
+          "additionalProperties": false
+        },
+        "wavelengthNm": {
+          "type": "number",
+          "minimum": 100,
+          "maximum": 10000
+        },
+        "materials": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "$ref": "#/definitions/XamezProject/properties/description"
+                  },
+                  "provenance": {
+                    "type": "object",
+                    "properties": {
+                      "reference": {
+                        "type": "string",
+                        "maxLength": 4000,
+                        "minLength": 1
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "maxLength": 2000
+                      },
+                      "retrievedOn": {
+                        "type": "string",
+                        "maxLength": 30
+                      },
+                      "note": {
+                        "$ref": "#/definitions/XamezProject/properties/description"
+                      }
+                    },
+                    "required": [
+                      "reference"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "model": {
+                    "type": "string",
+                    "const": "constant"
+                  },
+                  "n": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "label",
+                  "provenance",
+                  "model",
+                  "n"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "$ref": "#/definitions/XamezProject/properties/description"
+                  },
+                  "provenance": {
+                    "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/0/properties/provenance"
+                  },
+                  "model": {
+                    "type": "string",
+                    "const": "sellmeier3"
+                  },
+                  "b": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/b/items/0"
+                      },
+                      {
+                        "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/b/items/0"
+                      }
+                    ]
+                  },
+                  "cUm2": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": [
+                      {
+                        "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/b/items/0"
+                      },
+                      {
+                        "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/b/items/0"
+                      },
+                      {
+                        "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/b/items/0"
+                      }
+                    ]
+                  },
+                  "validWavelengthNm": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": [
+                      {
+                        "type": "number",
+                        "minimum": 0.000001,
+                        "maximum": 1000000
+                      },
+                      {
+                        "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "label",
+                  "provenance",
+                  "model",
+                  "b",
+                  "cUm2",
+                  "validWavelengthNm"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "propertyNames": {
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "initialMediumId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "firstVertexZMm": {
+          "type": "number",
+          "minimum": -1000000,
+          "maximum": 1000000
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "point"
+                },
+                "positionMm": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "$ref": "#/definitions/XamezProject/properties/firstVertexZMm"
+                    },
+                    "y": {
+                      "$ref": "#/definitions/XamezProject/properties/firstVertexZMm"
+                    },
+                    "z": {
+                      "$ref": "#/definitions/XamezProject/properties/firstVertexZMm"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y",
+                    "z"
+                  ],
+                  "additionalProperties": false
+                },
+                "angular": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "model": {
+                          "type": "string",
+                          "const": "uniform-cone"
+                        },
+                        "halfAngleDeg": {
+                          "type": "number",
+                          "minimum": 0.001,
+                          "exclusiveMaximum": 90
+                        }
+                      },
+                      "required": [
+                        "model",
+                        "halfAngleDeg"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "model": {
+                          "type": "string",
+                          "const": "cosine-power"
+                        },
+                        "fullWidthHalfMaxDeg": {
+                          "type": "number",
+                          "minimum": 0.001,
+                          "exclusiveMaximum": 180
+                        }
+                      },
+                      "required": [
+                        "model",
+                        "fullWidthHalfMaxDeg"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "kind",
+                "positionMm",
+                "angular"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "collimated"
+                },
+                "launchPlaneZMm": {
+                  "$ref": "#/definitions/XamezProject/properties/firstVertexZMm"
+                },
+                "launchAperture": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "circle"
+                        },
+                        "radiusMm": {
+                          "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "radiusMm"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "rectangle"
+                        },
+                        "widthMm": {
+                          "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                        },
+                        "heightMm": {
+                          "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "widthMm",
+                        "heightMm"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "fieldAnglesDeg": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": -80,
+                      "maximum": 80
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": -80,
+                      "maximum": 80
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "kind",
+                "launchPlaneZMm",
+                "launchAperture",
+                "fieldAnglesDeg"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "surfaces": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/XamezProject/properties/description"
+                  },
+                  "aperture": {
+                    "$ref": "#/definitions/XamezProject/properties/source/anyOf/1/properties/launchAperture"
+                  },
+                  "gapAfterMm": {
+                    "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "const": "interface"
+                  },
+                  "shape": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "plane"
+                          }
+                        },
+                        "required": [
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "sphere"
+                          },
+                          "radiusMm": {
+                            "$ref": "#/definitions/XamezProject/properties/firstVertexZMm"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "radiusMm"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "mediumAfterId": {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label",
+                  "aperture",
+                  "gapAfterMm",
+                  "kind",
+                  "shape",
+                  "mediumAfterId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/XamezProject/properties/description"
+                  },
+                  "aperture": {
+                    "$ref": "#/definitions/XamezProject/properties/source/anyOf/1/properties/launchAperture"
+                  },
+                  "gapAfterMm": {
+                    "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "const": "mask"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label",
+                  "aperture",
+                  "gapAfterMm",
+                  "kind"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/XamezProject/properties/description"
+                  },
+                  "aperture": {
+                    "$ref": "#/definitions/XamezProject/properties/source/anyOf/1/properties/launchAperture"
+                  },
+                  "gapAfterMm": {
+                    "type": "null"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "const": "detector"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label",
+                  "aperture",
+                  "gapAfterMm",
+                  "kind"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/XamezProject/properties/description"
+                  },
+                  "aperture": {
+                    "$ref": "#/definitions/XamezProject/properties/source/anyOf/1/properties/launchAperture"
+                  },
+                  "gapAfterMm": {
+                    "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "const": "thin-lens"
+                  },
+                  "focalLengthMm": {
+                    "$ref": "#/definitions/XamezProject/properties/firstVertexZMm"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label",
+                  "aperture",
+                  "gapAfterMm",
+                  "kind",
+                  "focalLengthMm"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/XamezProject/properties/description"
+                  },
+                  "aperture": {
+                    "$ref": "#/definitions/XamezProject/properties/source/anyOf/1/properties/launchAperture"
+                  },
+                  "gapAfterMm": {
+                    "$ref": "#/definitions/XamezProject/properties/materials/additionalProperties/anyOf/1/properties/validWavelengthNm/items/0"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "const": "mirror"
+                  },
+                  "shape": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "plane"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "tiltDeg": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": -80,
+                        "maximum": 80
+                      },
+                      "y": {
+                        "type": "number",
+                        "const": 0
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "reflectance": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "id",
+                  "label",
+                  "aperture",
+                  "gapAfterMm",
+                  "kind",
+                  "shape",
+                  "tiltDeg",
+                  "reflectance"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "lensGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+              },
+              "surfaceIds": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": [
+                  {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  },
+                  {
+                    "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+                  }
+                ]
+              },
+              "tiltDeg": {
+                "$ref": "#/definitions/XamezProject/properties/surfaces/items/anyOf/4/properties/tiltDeg"
+              }
+            },
+            "required": [
+              "id",
+              "surfaceIds",
+              "tiltDeg"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 50
+        },
+        "analysis": {
+          "type": "object",
+          "properties": {
+            "objectSurfaceId": {
+              "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+            },
+            "footprintSurfaceId": {
+              "$ref": "#/definitions/XamezProject/properties/initialMediumId"
+            },
+            "detectorGrid": {
+              "type": "object",
+              "properties": {
+                "width": {
+                  "type": "integer",
+                  "minimum": 8,
+                  "maximum": 512
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 8,
+                  "maximum": 512
+                }
+              },
+              "required": [
+                "width",
+                "height"
+              ],
+              "additionalProperties": false
+            },
+            "objectProbeFractions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": -1,
+                    "maximum": 1
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": -1,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 9
+            }
+          },
+          "required": [
+            "footprintSurfaceId",
+            "detectorGrid",
+            "objectProbeFractions"
+          ],
+          "additionalProperties": false
+        },
+        "sampling": {
+          "type": "object",
+          "properties": {
+            "algorithm": {
+              "type": "string",
+              "const": "mulberry32-v1"
+            },
+            "seed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "illuminationRayCount": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 1000000
+            },
+            "diagnosticRayCount": {
+              "type": "integer",
+              "minimum": 16,
+              "maximum": 10000
+            },
+            "maxStoredPaths": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 256
+            }
+          },
+          "required": [
+            "algorithm",
+            "seed",
+            "illuminationRayCount",
+            "diagnosticRayCount",
+            "maxStoredPaths"
+          ],
+          "additionalProperties": false
+        },
+        "physics": {
+          "type": "object",
+          "properties": {
+            "transmission": {
+              "type": "string",
+              "enum": [
+                "ideal",
+                "fresnel-uncoated"
+              ]
+            }
+          },
+          "required": [
+            "transmission"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "name",
+        "description",
+        "units",
+        "wavelengthNm",
+        "materials",
+        "initialMediumId",
+        "firstVertexZMm",
+        "source",
+        "surfaces",
+        "analysis",
+        "sampling",
+        "physics"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

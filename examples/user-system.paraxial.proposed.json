@@ -97,7 +97,7 @@
     ]
   },
   "sampling": {
-    "algorithm": "to-be-specified-v1",
+    "algorithm": "mulberry32-v1",
     "seed": 12345,
     "illuminationRayCount": 100000,
     "diagnosticRayCount": 1024,
